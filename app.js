@@ -66,8 +66,8 @@ function filterTodo(e) {
   //arrayi inputa menimsetmek
   arr.forEach((item) => {
     form_div.innerHTML += `
-  <div class="todo-div">
-  <input type="text" id="todo" class="todo filterTodos" value="${item}">
+  <div class="todo-div " >
+  <input type="text" id="todo" class="todo filterTodos " value="${item}">
   <div class="delete">
     <span class="x">&times</span>
   </div>
@@ -80,7 +80,7 @@ function filterTodo(e) {
 function deleteTodo(e) {
   if (e.target.className === "delete") {
     if (e.target.parentElement.parentElement.childElementCount === 1) {
-      alert("Son Todonu Silmek Mumkun deil");
+        alertify.alert('İcazə Verilmədi', 'Son Todonu Silmək Mümkün Deyil!' );
     } else {
       e.target.parentElement.remove();
     }
@@ -88,7 +88,7 @@ function deleteTodo(e) {
     if (
       e.target.parentElement.parentElement.parentElement.childElementCount === 1
     ) {
-      alert("Son Todonu Silmek Mumkun deil");
+        alertify.alert('İcazə Verilmədi', 'Son Todonu Silmək Mümkün Deyil!');
     } else {
       e.target.parentElement.parentElement.remove();
     }
@@ -110,11 +110,12 @@ function firstTodo() {
 function addTodoUI() {
   form_div.innerHTML += `
     <div class="todo-div">
-    <input type="text" id="todo" class="todo filterTodos"/>
+    <input type="text" id="todo" class="todo filterTodos "/>
     <div class="delete">
       <span class="x">&times</span>
     </div>
   </div>`;
+  alertify.notify('Əlavə olundu', 'success', 1);
   let input = document.querySelectorAll("#todo");
   input.forEach(findItem);
 }
