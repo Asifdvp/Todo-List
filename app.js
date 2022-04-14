@@ -11,55 +11,107 @@ function allEventListeners() {
   //butun listenerslar
   first.addEventListener("blur", firstTodo);
   form.addEventListener("submit", addTodo);
+  form.addEventListener("change", addTodoStorage);
   form_div.addEventListener("click", deleteTodo);
   filter.addEventListener("click", filterTodo);
+  document.addEventListener("DOMContentLoaded", loadTodo);
 }
 
-//Todolari Filterlemek
-function filterTodo(e) {
+
+//Sehife yuklendiyinden todolari elave etmek
+function loadTodo() {
+  let todos = getTodoFromStorage();
+  if (todos.length === 0) {
+    todos.forEach((item) => {
+      form_div.innerHTML = `<div class="todo-div " >
+    <input type="text" id="todo" class="todo filterTodos " value="${item}">
+    <div class="delete">
+      <span class="x">&times</span>
+    </div>
+  </div>
+    `
+    });
+  } else {
+    form_div.innerHTML = "";
+    console.log(todos.length);
+    todos.forEach((item) => {
+      form_div.innerHTML += `<div class="todo-div " >
+  <input type="text" id="todo" class="todo filterTodos " value="${item}">
+  <div class="delete">
+    <span class="x">&times</span>
+  </div>
+</div>
+  `;
+    });
+  }
+}
+
+//arrayi storageden almaq
+function getTodoFromStorage() {
+  let todos;
+  if (JSON.parse(localStorage.getItem("Todos")) === null) {
+    todos = [];
+  } else {
+    todos = JSON.parse(localStorage.getItem("Todos"));
+  }
+  return todos;
+}
+
+//arrayi local storaga elave etmek
+function addTodoStorage() {
+  let arr = getTodo();
+  let todos = getTodoFromStorage();
+  todos.push(arr[arr.length - 1]);
+  localStorage.setItem("Todos", JSON.stringify(todos));
+}
+
+//Todo Arrayi
+function getTodo() {
   let todos = document.querySelectorAll(".filterTodos");
   let arr = [];
   // arr massivine input deyerlerini elave etmek
   todos.forEach((item) => {
     arr.push(item.value.trim());
   });
+  return arr;
+}
+
+//Todolari Filterlemek
+function filterTodo(e) {
+  let arr = getTodo();
   if (index === 0) {
     filter.src = "images/filterAZ.svg";
     // arr i A-Z siralamaq
-    
+
     arr.sort((a, b) => {
-        if(isNaN(Number(a)) && isNaN(Number(b))){
-            if (a > b) {
-                return 1;
-              } else if (a < b) {
-                return -1;
-              } else {
-                return 0;
-              }
+      if (isNaN(Number(a)) && isNaN(Number(b))) {
+        if (a > b) {
+          return 1;
+        } else if (a < b) {
+          return -1;
+        } else {
+          return 0;
         }
-        else{
-            return a-b;
-        }
-     
+      } else {
+        return a - b;
+      }
     });
     index++;
   } else {
     filter.src = "images/filterZA.svg";
     index--;
     arr.sort((a, b) => {
-        if(isNaN(Number(a)) && isNaN(Number(b))){
-            if (a > b) {
-                return -1;
-              } else if (a < b) {
-                return 1;
-              } else {
-                return 0;
-              }
+      if (isNaN(Number(a)) && isNaN(Number(b))) {
+        if (a > b) {
+          return -1;
+        } else if (a < b) {
+          return 1;
+        } else {
+          return 0;
         }
-        else{
-            return b-a;
-        }
-     
+      } else {
+        return b - a;
+      }
     });
   }
   form_div.innerHTML = "";
@@ -67,7 +119,7 @@ function filterTodo(e) {
   arr.forEach((item) => {
     form_div.innerHTML += `
   <div class="todo-div " >
-  <input type="text" id="todo" class="todo filterTodos " value="${item}">
+  <input type="text" id="todo" class="todo filterTodos local " value="${item}">
   <div class="delete">
     <span class="x">&times</span>
   </div>
@@ -79,25 +131,30 @@ function filterTodo(e) {
 //todo silmek
 function deleteTodo(e) {
   if (e.target.className === "delete") {
-    if (e.target.parentElement.parentElement.childElementCount === 1) {
-        alertify.alert('İcazə Verilmədi', 'Son Todonu Silmək Mümkün Deyil!' );
-    } else {
-      e.target.parentElement.remove();
-    }
+    e.target.parentElement.remove();
+    deleteTodoFromStorage(e.target.previousElementSibling.value);
   } else if (e.target.className === "x") {
-    if (
-      e.target.parentElement.parentElement.parentElement.childElementCount === 1
-    ) {
-        alertify.alert('İcazə Verilmədi', 'Son Todonu Silmək Mümkün Deyil!');
-    } else {
-      e.target.parentElement.parentElement.remove();
-    }
+    e.target.parentElement.parentElement.remove();
+
+    deleteTodoFromStorage(e.target.parentElement.previousElementSibling.value);
   }
+}
+
+//Todolari Localdan silmek
+function deleteTodoFromStorage(deleteTodo) {
+  let todos = getTodoFromStorage();
+  todos.forEach((todo, index) => {
+    if (todo == deleteTodo) {
+      todos.splice(index, 1);
+    }
+  });
+  localStorage.setItem("Todos", JSON.stringify(todos));
 }
 
 //todo elave elemek
 function addTodo(e) {
   addTodoUI();
+
   e.preventDefault();
 }
 
@@ -110,20 +167,20 @@ function firstTodo() {
 function addTodoUI() {
   form_div.innerHTML += `
     <div class="todo-div">
-    <input type="text" id="todo" class="todo filterTodos "/>
+    <input type="text" id="todo" class="todo filterTodos local"/>
     <div class="delete">
       <span class="x">&times</span>
     </div>
   </div>`;
-  alertify.notify('Əlavə olundu', 'success', 1);
+  alertify.notify("Əlavə olundu", "success", 1);
   let input = document.querySelectorAll("#todo");
   input.forEach(findItem);
 }
 
 //value menimsetme funksiyasi
 function findItem(item) {
-  item.addEventListener("keyup", (e) => {
-    item.addEventListener("blur", (e) => {
+  item.addEventListener("keyup", (_) => {
+    item.addEventListener("blur", (_) => {
       item.setAttribute("value", item.value);
     });
   });
