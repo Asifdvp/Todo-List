@@ -77,6 +77,7 @@ function getTodo() {
 }
 
 //Todolari Filterlemekgut
+function filterTodo(){
   let arr = getTodo();
   if (index === 0) {
     filter.src = "images/filterAZ.svg";
@@ -126,7 +127,7 @@ function getTodo() {
   `;
   });
 
-
+}
 //todo silmek
 function deleteTodo(e) {
   if (e.target.className === "delete") {
