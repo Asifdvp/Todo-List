@@ -17,16 +17,6 @@ function allEventListeners() {
   document.addEventListener("DOMContentLoaded", loadTodo);
 }
 
-//deyisiklik
-function changeTodoStorage() {
-  let arr = getTodo();
-  let todos = getTodoFromStorage();
-
-  todos.push(arr[arr.length - 1]);
-  localStorage.setItem("Todos", JSON.stringify(todos));
-}
-
-
 
 //Sehife yuklendiyinden todolari elave etmek
 function loadTodo() {
