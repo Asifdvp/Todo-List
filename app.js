@@ -17,6 +17,16 @@ function allEventListeners() {
   document.addEventListener("DOMContentLoaded", loadTodo);
 }
 
+//deyisiklik
+function changeTodoStorage() {
+  let arr = getTodo();
+  let todos = getTodoFromStorage();
+
+  todos.push(arr[arr.length - 1]);
+  localStorage.setItem("Todos", JSON.stringify(todos));
+}
+
+
 
 //Sehife yuklendiyinden todolari elave etmek
 function loadTodo() {
@@ -60,8 +70,12 @@ function getTodoFromStorage() {
 //arrayi local storaga elave etmek
 function addTodoStorage() {
   let arr = getTodo();
-  let todos = getTodoFromStorage();
-  todos.push(arr[arr.length - 1]);
+  console.log(arr) 
+   let todos = getTodoFromStorage();
+   for(let i=0;i<arr.length;i++){
+    todos[i]=arr[i];
+   }
+  //todos.push(arr[arr.length - 1]);
   localStorage.setItem("Todos", JSON.stringify(todos));
 }
 
