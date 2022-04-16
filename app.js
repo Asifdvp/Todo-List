@@ -2,7 +2,7 @@
 let form = document.getElementById("form");
 let form_div = document.getElementById("form-div");
 let btn = document.getElementById("btn");
-let first = document.querySelector(".to");
+let first = document.querySelector("#todo");
 let filter = document.getElementById("filter");
 let index = 0;
 allEventListeners();
@@ -158,7 +158,6 @@ function deleteTodoFromStorage(deleteTodo) {
 //todo elave elemek
 function addTodo(e) {
   addTodoUI();
-
   e.preventDefault();
 }
 
