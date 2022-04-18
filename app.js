@@ -129,6 +129,8 @@ function filterTodo(){
   </div>
 </div>
   `;
+  let input = document.querySelectorAll("#todo");
+  input.forEach(findItem);
   });
 
 }
